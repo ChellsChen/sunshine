@@ -1,0 +1,7 @@
+*.pyc
+*.log
+*.db
+._*
+*.out
+*.rdb
+.idea

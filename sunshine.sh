@@ -1,19 +1,8 @@
 #!/bin/sh
 
-# cd $(dirname $(readlink $0))/baichuan-web
-
-
-if [ -L "$0" ]
-    then
-    cd $(dirname $(readlink $0))/baichuan-web
-else
-    filepath=$(cd "$(dirname "$0")"; pwd)
-    cd $filepath/baichuan-web
-fi
-
 
 getpid(){
-    PID=$(pgrep -f "python manage.py")
+    PID=$(pgrep -f "python sweb.py")
     if [ "x$?" != "x0" ]
     then
         PID=''
@@ -29,11 +18,11 @@ start()
     PID=$(getpid)
     if [ "x$PID" != "x" ]
     then
-        echo "\033[34m manage.py is running"
+        echo "\033[34m sweb.py is running"
         exit 0
     fi
 
-    python manage.py run &
+    python sweb.py &
 }
 
 stop()
@@ -51,18 +40,6 @@ stop()
     done
 }
 
-initdb()
-{
-    if [ ! -d "db" ]
-    then
-        mkdir db
-    fi
-    echo "\033[34m init user.db ...\033[0m"
-    python manage.py createdb
-}
-
-
-
 case $1 in
     start)
         start
@@ -77,9 +54,6 @@ case $1 in
         ;;
     status)
         getpid
-        ;;
-    initdb)
-        initdb
         ;;
 esac
 
