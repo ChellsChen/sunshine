@@ -23,6 +23,7 @@ logging.basicConfig(level=logging.INFO,
     )
 
 
+app = Flask(__name__)
 
 def init_model(app):
     config = load_config()
@@ -32,17 +33,15 @@ def init_model(app):
     mode_infos = load(plugin_dir)
     for mode_info in mode_infos.values():
         _, bps, name = mode_info
-        app.register_blueprint(bps)
-
+        url_prefix = "/" + name
+        app.register_blueprint(bps, url_prefix = url_prefix)
 
 def run_application():
-    app = Flask(__name__)
     init_model(app)
     app.run(host="0.0.0.0", port=8000, threaded=True)
 
 def run_wsgi():
     from flup.server.fcgi import WSGIServer
-    app = Flask(__name__)
     init_model(app)
     WSGIServer(app, bindAddress=('0.0.0.0', 8000), debug=True, multithreaded=True).run()
 

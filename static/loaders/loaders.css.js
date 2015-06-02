@@ -39,3 +39,11 @@ $(function() {
   $('.loader-inner.ball-spin-fade-loader-min').html(addDivs(8));
 
 });
+
+
+(function($){
+  $.fn.Loaders =function(settings){
+    alert("------------------");
+  }
+
+})(jQuery);
