@@ -33,6 +33,9 @@ def init_model(app):
     mode_infos = load(plugin_dir)
     for mode_info in mode_infos.values():
         _, bps, name = mode_info
+        if name == "index":
+            app.register_blueprint(bps)
+            continue
         url_prefix = "/" + name
         app.register_blueprint(bps, url_prefix = url_prefix)
 
@@ -47,4 +50,4 @@ def run_wsgi():
 
 
 if __name__ == "__main__":
-    run_application()
+    run_wsgi()
