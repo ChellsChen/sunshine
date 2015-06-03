@@ -9,4 +9,8 @@ from setting import curdir
 
 
 name = "email"
-bp = Blueprint("emailgrade", __name__)
+bp = Blueprint("email", __name__)
+
+@bp.route("/")
+def index():
+    return "shell"

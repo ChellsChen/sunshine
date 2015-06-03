@@ -41,12 +41,12 @@ def init_model(app):
 
 def run_application():
     init_model(app)
-    app.run(host="0.0.0.0", port=8000, threaded=True)
+    app.run(host="0.0.0.0", port=8001, threaded=True)
 
 def run_wsgi():
     from flup.server.fcgi import WSGIServer
     init_model(app)
-    WSGIServer(app, bindAddress=('0.0.0.0', 8000), debug=True, multithreaded=True).run()
+    WSGIServer(app, bindAddress=('0.0.0.0', 8001), debug=True, multithreaded=True).run()
 
 
 if __name__ == "__main__":
