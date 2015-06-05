@@ -19,11 +19,14 @@ from config import load_config
 
 logging.basicConfig(level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s',
-    #filename=".log",
+    filename=".log",
     )
 
 
-app = Flask(__name__)
+def init_app():
+    app = Flask(__name__)
+    init_model(app)
+    return app
 
 def init_model(app):
     config = load_config()
@@ -40,13 +43,13 @@ def init_model(app):
         app.register_blueprint(bps, url_prefix = url_prefix)
 
 def run_application():
-    init_model(app)
     app.run(host="0.0.0.0", port=8001, threaded=True)
 
 def run_wsgi():
     from flup.server.fcgi import WSGIServer
-    init_model(app)
     WSGIServer(app, bindAddress=('0.0.0.0', 8001), debug=True, multithreaded=True).run()
+
+app = init_app()
 
 
 if __name__ == "__main__":
