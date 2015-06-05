@@ -46,18 +46,27 @@
         <div class="loader-inner ball-pulse"></div>
     </div>
 
+    <div class="inner-loadering">
+        <div class="test-div">
+            <div></div>
+            <p></p>
+
+        </div>
+    </div>
+
 
 </div>
 
 <script type="text/javascript">
 
 $(document).ready(function(){
-    $(".ball-spin-fade-loader").Loaders({proportion:0.5,backgroundcolor:"#ff6600",});
+    $(".ball-spin-fade-loader").Loaders({proportion:0.5, backgroundcolor:"#ff00aa"});
 
-    $(".ball-scale-multiple").Loaders({proportion:1.5,backgroundcolor:"#ff66aa",});
-    $(".ball-grid-beat").Loaders({proportion:0.5,backgroundcolor:"#aa66ff",});
+    $(".ball-scale-multiple").Loaders({proportion:1.5});
+    $(".ball-grid-beat").Loaders({proportion:0.5});
 
     $(".ball-pulse").Loaders({proportion:1});
+    $(".test-div").Loaders({proportion:1, backgroundcolor:"#ffbbcc"});
 });
 
 </script>
