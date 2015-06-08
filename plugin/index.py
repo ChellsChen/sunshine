@@ -9,10 +9,9 @@
 from flask import Blueprint, render_template
 
 name = "index"
-bp = Blueprint("index", __name__)
 
-@bp.route("/")
-@bp.route("/index")
-def page_index():
-    return render_template("index.html")
+# @bp.route("/")
+# @bp.route("/index")
+# def page_index():
+#     return render_template("index.html")
 

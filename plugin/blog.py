@@ -10,10 +10,23 @@ import os
 from flask import Blueprint, render_template
 
 name = "blog"
-bp = Blueprint("blog", __name__)
+#bp = Blueprint("blog", __name__)
+bp = "this is bp"
+urls = (
+        "/", "index",
+        "/test/", "test",
+        )
 
-@bp.route("/")
-@bp.route("/index")
-@bp.route("/me")
-def blogindex():
-    return render_template("blog/index.html")
+# @bp.route("/")
+# @bp.route("/index")
+# @bp.route("/me")
+# def blogindex():
+#     return render_template("blog/index.html")
+
+def index():
+    print "------"
+    return 'hello shell'
+
+def test():
+    print "------"
+    return 'hello'
