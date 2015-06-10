@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.INFO,
     )
 
 def run_application(app):
-    app.run(host="0.0.0.0", port=8001, threaded=True, debug=True)
+    app.run(host="0.0.0.0", port=8001, threaded=True, debug=False)
 
 def run_wsgi(app):
     from flup.server.fcgi import WSGIServer

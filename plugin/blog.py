@@ -46,10 +46,10 @@ class Article(MyMethodView):
 
         return "sucess!"
 
-def Articles(MyMethodView):
+class Articles(MyMethodView):
     def get(self):
         bd = BlogData(STOREPATH)
-        return
+        return "s"
 
 
 
