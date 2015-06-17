@@ -22,7 +22,8 @@ start()
         exit 0
     fi
 
-    python sweb.py &
+    nohup python sweb.py &
+    sleep 1
 }
 
 stop()
