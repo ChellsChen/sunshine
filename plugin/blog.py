@@ -17,16 +17,13 @@ name = "blog"
 bp = "this is bp"
 
 class Blog(MyMethodView):
-    def GET(self, key):
-        if not key:
-            return render_template("blog/index.html")
-        return "haha"
+    def GET(self):
+        return render_template("blog/index.html")
+
 
 class Article(MyMethodView):
-    def get(self, key):
-        if not key:
-            return render_template("blog/add.html")
-        return "haha"
+    def get(self):
+        return render_template("blog/add.html")
 
     def post(self):
         form = request.form
