@@ -37,7 +37,12 @@ def sunshine_test():
     sunshine = Sunshine(app, plugin_dir)
     run_application(app)
 
+def sunshine_wsgi():
+    plugin_dir = os.path.join(curdir, "plugin")
+    app = Flask(__name__)
+    sunshine = Sunshine(app, plugin_dir)
+    run_wsgi(app)
 
 if __name__ == "__main__":
-    sunshine_test()
+    sunshine_wsgi()
 
