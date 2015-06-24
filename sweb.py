@@ -13,8 +13,6 @@ for p in sys_path:
     sys.path.insert(0,p)
 
 from flask import Flask, render_template
-import flask
-# from plugins import load
 from config import load_config
 from flaskext import Sunshine
 
@@ -40,9 +38,10 @@ def sunshine_test():
 def sunshine_wsgi():
     plugin_dir = os.path.join(curdir, "plugin")
     app = Flask(__name__)
+    app.config.from_object(load_config())
     sunshine = Sunshine(app, plugin_dir)
     run_wsgi(app)
 
 if __name__ == "__main__":
-    sunshine_wsgi()
+    sunshine_test()
 
