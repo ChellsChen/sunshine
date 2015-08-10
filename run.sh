@@ -21,9 +21,14 @@ start()
         echo "nimitz is running"
         exit 0
     fi
+<<<<<<< HEAD:run.sh
     filepath=$(cd "$(dirname "$0")";pwd)
     cd $filepath
     nohup python manage.py run &
+=======
+
+    nohup python sweb.py &
+>>>>>>> 8e16c726511b17e5765306090a1e222b112d1b39:sweb.sh
     sleep 1
 }
 
