@@ -1,3 +1,15 @@
-# sunshine
+# 基于flask封装的web框架
 
->sunshine是我基于flask做的一个封装, 提供了一个插件式的结构,可以很方便的增加新的功能,
+---
+本框架在flask基础上封装的，实现自动加载flask里 blueprints功能，自动加载restful api的功能。这个框架带有一个简易的登录系统，可当做开发的模版。
+目录说明：
+>* actions/：路由和视图函数接口目录
+        actions/blueprints/   flask中蓝图接口
+        actions/restfulapi/   基于restful的api接口
+>* config/: flask内置的一些配置
+>* packages/: 接口目录，开发的接口模块可以放在这里面
+>* static/: 静态文件
+>* templates/：模板文件
+>* webapp.py: web应用的初始化
+>* manage.py: 启动程序
+            启动命令： python manage.py run

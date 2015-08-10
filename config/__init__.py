@@ -4,12 +4,14 @@
 import os
 
 class BaseConfig(object):
-    DEBUG = True
+    DEBUG = False
     TESTING = False
     PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
-    SECRET_KEY = "fraudmetrixlabs"
+    SECRET_KEY = "nimitz"
     THREADED = True
 
+    SQLALCHEMY_DATABASE_URI = "mysql://root:123456@127.0.0.1/nimitz"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
