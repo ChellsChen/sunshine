@@ -20,7 +20,8 @@ sys.setdefaultencoding('utf8')
 from flask.ext.script import Manager
 
 from webapp import logger, init_app
-from webapp import APP
+from webapp import APP, APP_DB
+from models.user import User
 
 manager = Manager(APP)
 
@@ -39,6 +40,19 @@ def web_start():
 @manager.command
 def run():
     web_start()
+
+@manager.command
+def createdb():
+    """init mysql tables"""
+    init_app()
+    try:
+        APP_DB.create_all()
+    except:
+        pass
+    u = User("manager", "manager@fraudmetrix.cn", "123456", "0")
+    u.confirmed = True
+    APP_DB.session.add(u)
+    APP_DB.session.commit()
 
 if __name__ == "__main__":
     manager.run()

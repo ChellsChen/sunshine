@@ -7,12 +7,15 @@
 import os
 import logging
 import logging.handlers
-from flask import Flask
+from flask import Flask, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
+from flask.ext.restful import Api
+
+import imp
 
 from config import load_config
-from flaskexts import Sunshine
+from flaskexts import Sunshine, load_restful
 
 
 BASEPATH = os.path.dirname(os.path.realpath(__file__))
@@ -37,11 +40,26 @@ logger.setLevel(logging.INFO)
 
 
 APP = Flask(__name__)
+APP_DB = SQLAlchemy()
+APP_LM = LoginManager()
+APP_API = Api()
+
 
 def init_app():
     APP.config.from_object(load_config())
 
-    load_dir = os.path.join(BASEPATH, "actions/restfulapi")
+    APP_DB.init_app(APP)
+
+    APP_LM.init_app(APP)
+    APP_LM.login_view = 'auth.login'
+
+    # 加载基于flask-ext-restful的api接口
+    restful_dir = os.path.join(BASEPATH, "actions/restfulapi")
+    load_restful(APP_API, restful_dir)
+    APP_API.init_app(APP)
+
+    # 加载blueprints, plugins接口
+    load_dir = os.path.join(BASEPATH, "actions/plugins")
     blueprints_dir = os.path.join(BASEPATH, "actions/blueprints")
     sunshine = Sunshine(APP, load_dir, blueprints_dir)
 

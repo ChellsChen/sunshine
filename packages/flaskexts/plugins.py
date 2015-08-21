@@ -42,3 +42,4 @@ def __mode_init(mode, attrs):
             return []
         info.append(getattr(mode, attr))
     return info
+

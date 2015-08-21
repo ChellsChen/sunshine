@@ -7,24 +7,25 @@
 
 import os
 import logging
-from flask import Blueprint, render_template, request
+import urllib
+from flask import request, url_for
 from flask.views import MethodView
 from plugins import load
-import urllib
 
 
 class Sunshine(object):
     URLS = [ ]
     PLUGINS = [ ]
 
-    def __init__(self, app, plugin_dir, blueprints_dir=None):
+    def __init__(self, app, plugin_dir=None, blueprints_dir=None):
         self.app = app
         self.plugin_dir = plugin_dir
         self.blueprints_dir = blueprints_dir
-        self.load_plugin()
-        self.logurls()
 
+        self.load_plugin()
         self.load_blueprint()
+
+        self.list_routes()
 
     def load_blueprint(self):
         if self.blueprints_dir is None:
@@ -35,19 +36,10 @@ class Sunshine(object):
             bp = bps[1]
             self.app.register_blueprint(bp)
 
-        output = [" "]
-        for rule in self.app.url_map.iter_rules():
-            methods = ','.join(rule.methods)
-            if rule.rule == rule.endpoint:
-                continue
-            line = urllib.unquote("{:30s} {:30s} {}".format(rule, methods, rule.endpoint))
-            output.append(line)
-
-        output = sorted(output)
-        logging.info("\n".join(output))
-
-
     def load_plugin(self):
+        if self.plugin_dir is None:
+            return
+
         mode_infos = load(self.plugin_dir, 'name', 'urls')
 
         for model, name, urls in mode_infos.values():
@@ -55,49 +47,86 @@ class Sunshine(object):
 
         self.__add_url()
 
-    def groups(self, urls):
-        i = 0
-        t = []
-        while i < len(urls):
-            t.append((urls[i], urls[i+1]))
-            i = i + 2
-        return t
-
     def init_mode(self, model, name, urls):
-        for url, fun in self.groups(urls):
+        for url, fun in _groups(urls):
             if url.startswith("/"):
                 url = "/%s%s"%(name, url)
             else:
                 url = os.path.join("/", name, url)
 
-            if isinstance(fun, basestring):
-                if not hasattr(model, fun):
-                    logger.error("plugin %s not hasattr [%s]"%(model, fun))
-                    continue
-                fun = getattr(model, fun)
-            self.URLS.append((url, fun))
+            fun = _get_attr(model, fun)
+            if fun is None:
+                continue
+
+            self.URLS.append((name, url, fun))
 
         self.PLUGINS.append((name, model))
 
-    def logurls(self):
+    def __add_url(self):
+        for mode_name, url, fun in self.URLS:
+            self.register_api(mode_name, fun, url)
+
+    def register_api(self,mode_name, view, url):
+        endpoint = "%s.%s"%(mode_name, view.__name__)
+        view_func = view.as_view(url)
+        self.app.add_url_rule(url, view_func=view_func,
+                        endpoint = endpoint,
+                        methods = ['GET','PUT', 'DELETE','POST'])
+
+    def list_routes(self):
+        output = []
+        for rule in self.app.url_map.iter_rules():
+
+            options = {}
+            for arg in rule.arguments:
+                options[arg] = "[{0}]".format(arg)
+
+            url = url_for(rule.endpoint, **options)
+            output.append((url, rule.endpoint))
+
         l = 0
-        for u,c in self.URLS:
+        for u, e in output:
             if len(u) > l:
                 l = len(u)
 
-        lines = ['']
-        for u,c in self.URLS:
-            lines.append("%s  ===>  %s" % (u.ljust(l),c))
-        logging.info('\n'.join(lines))
+        lines = [""]
+        for  u, e in sorted(output,key=lambda x:x[1]):
+            lines.append("%s ===> %s" %(u.ljust(l), e))
 
-    def __add_url(self):
-        for url, fun in self.URLS:
-            self.register_api(fun, url)
+        logging.info("\n".join(lines))
 
-    def register_api(self,view, url):
-        view_func = view.as_view(url)
-        self.app.add_url_rule(url, view_func=view_func,
-                         methods=['GET','PUT', 'DELETE','POST'])
+
+def _get_attr(model, view):
+    if isinstance(view, basestring):
+        if not hasattr(model, view):
+            logging.error("mode %s not hasattr [%s]" %(model, view))
+            return None
+
+        view = getattr(model, view)
+    return view
+
+
+def _groups(urls):
+    i = 0
+    t = []
+    while i < len(urls):
+        t.append((urls[i], urls[i+1]))
+        i = i + 2
+    return t
+
+def load_restful(app_api, restful_dir):
+    mode_infos = load(restful_dir, "urls")
+    for model, urls in mode_infos.values():
+        mode_name = model.__name__
+        names = mode_name.split("/")[-1:][0]
+
+        for url, view in _groups(urls):
+            view = _get_attr(model, view)
+            if view is None:
+                continue
+
+            endpoint = "%s.%s"%(names, view.__name__)
+            app_api.add_resource(view, url, endpoint=endpoint)
 
 
 class ClassViews(MethodView):

@@ -13,7 +13,7 @@
 
 > actions/：路由和视图函数接口目录
 
-*  actions/blueprints/ : flask中蓝图接口
+*  actions/blueprints/ :  flask中蓝图接口
 *  actions/restfulapi/ :  基于flask-ext-restful的api接口
 *  actions/plugins/    :  在flask自带的接口add_url_rule上实现的基于restful思想的api接口
 
@@ -35,4 +35,11 @@
 
 ----------
 第一次启动程序之前，要先初始化数据库(创建用户表，添加用户名和密码)
+
+
+
+
+
+
+
 
