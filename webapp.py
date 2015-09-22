@@ -20,9 +20,13 @@ from flaskexts import Sunshine, load_restful
 
 BASEPATH = os.path.dirname(os.path.realpath(__file__))
 SHARE_PATH = os.path.join(BASEPATH, "share")
+LOG_PATH = os.path.join(BASEPATH, "log")
 
+if not os.path.isdir(LOG_PATH):
+    os.mkdir(LOG_PATH)
 
-LOG_FILE = "web.log"
+LOG_FILE = os.path.join(LOG_PATH, "web.log")
+
 LOG_FORMAT = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
 LOG_MAX = 1024*1024*10
 BACKUP_COUNT = 5
