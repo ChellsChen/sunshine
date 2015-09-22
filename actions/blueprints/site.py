@@ -14,6 +14,5 @@ app_bp = Blueprint("site", __name__)
 
 @app_bp.route("/")
 @app_bp.route("/index/")
-@login_required
 def index():
-    return render_template("index.html")
+    return render_template("index2.html")
